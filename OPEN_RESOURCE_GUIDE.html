@@ -1,0 +1,328 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kilifi Malaria Project — Resource Guide</title>
+<style>
+:root{--ink:#223b48;--accent:#275d74;--muted:#60727a;--paper:#fff;--line:#dce5e9}
+*{box-sizing:border-box}body{margin:0;background:#f2f5f6;color:var(--ink);font:16px/1.65 system-ui,Segoe UI,Arial,sans-serif}
+header,main,footer{max-width:1080px;margin:auto}header{padding:48px 38px 30px}header .eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);font-weight:700}h1{font-size:36px;line-height:1.15;margin:12px 0}h2{font-size:27px;line-height:1.25}h3{font-size:20px;margin-top:28px}h4{font-size:18px}a{color:var(--accent);text-underline-offset:3px}nav{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0}nav a,.button{background:white;border:1px solid var(--line);padding:9px 13px;border-radius:6px;text-decoration:none;font-size:14px}.button{display:inline-block;border-color:var(--accent);margin:5px 6px 5px 0}.callout{padding:18px 22px;background:#e5eff3;border-left:4px solid var(--accent);margin-top:22px}.small{font-size:14px;color:var(--muted)}section{background:white;padding:28px 38px;margin:0 0 18px;border:1px solid var(--line);border-radius:8px;scroll-margin-top:15px}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.45}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:11px 10px}th{background:#eaf0f3}tr:nth-child(even) td{background:#f8fafb}.table-wrap{overflow-x:auto}code{font:0.88em/1.5 Consolas,monospace;overflow-wrap:anywhere;background:#f0f3f5;padding:2px 4px;border-radius:3px}pre{background:#f0f3f5;padding:16px;overflow-x:auto}pre code{background:none;white-space:pre;overflow-wrap:normal;padding:0}li{margin-bottom:7px}footer{padding:18px 38px 45px}img{max-width:100%;height:auto;border:1px solid var(--line)}@media(max-width:650px){header,section,footer{padding:24px 18px}h1{font-size:29px}section{border-radius:0}.button{display:block}table{min-width:600px}}@media print{body{background:white}nav,.button{display:none}section{border:0;padding:16px 0;break-inside:auto}header,main,footer{max-width:none}h2,h3{break-after:avoid}tr{break-inside:avoid}a{color:inherit}header{padding:0}}
+</style></head><body><header><div class="eyebrow">Strathmore University · Bioinformatics project resources</div>
+<h1>Kilifi malaria project</h1><p>One folder for the proposal, verified Pf8 data, starter analysis, reading and group work.</p>
+<p class="small">Prepared 8 September 2026 · Historical samples, 1994–2020 · 1,872 retained records</p>
+<a class="button" href="01_Project_Documents/Kilifi_pfcrt_Project_Proposal.docx">Open editable proposal</a>
+<a class="button" href="01_Project_Documents/Project_Instructions.pdf">Open course instructions</a>
+<a class="button" href="02_Datasets/Kilifi_Subsets/kilifi_pfcrt_qcpass.csv">Open prepared dataset</a>
+<a class="button" href="03_Analysis/Kilifi_Starter_Analysis.ipynb">Open starter notebook file</a>
+<div class="callout"><strong>Start here:</strong> review the proposal, add your class group and official group number, then follow the running instructions below. The example results are computed starting material for your group to reproduce, understand and interpret.</div>
+<nav><a href="#data">Data and dictionary</a><a href="#run">Run the analysis</a><a href="#outputs">Read the example outputs</a><a href="#reading">Reading and citations</a><a href="#work">Group work plan</a><a href="#report">Report outline</a><a href="#repro">Reproducibility</a></nav></header><main><section id="data"><h2>Dataset guide and dictionary</h2>
+<h3>Which file should we use?</h3>
+<div class="table-wrap"><table>
+<tr><th>File</th><th>Rows</th><th>Purpose</th></tr>
+<tr><td><code>Original_Pf8/Pf8_samples.txt</code></td><td>33,325</td><td>Original worldwide sample metadata; tab-separated despite its <code>.txt</code> extension.</td></tr>
+<tr><td><code>Original_Pf8/Pf8_drug_resistance_marker_genotypes.tsv</code></td><td>24,409</td><td>Original worldwide marker calls for QC-passing samples. The project uses <code>Sample</code> and <code>crt_76[K]</code>.</td></tr>
+<tr><td><code>Original_Pf8/Pf8_README.txt</code></td><td>—</td><td>Original provider documentation, including encoding and QC definitions.</td></tr>
+<tr><td><code>Kilifi_Subsets/kilifi_pfcrt_qcpass.csv</code></td><td>1,872</td><td>Main prepared dataset; one retained sample per row. Start here for analysis.</td></tr>
+<tr><td><code>Kilifi_Subsets/kilifi_pfcrt_unambiguous.csv</code></td><td>1,703</td><td>Secondary subset excluding mixed and uncallable codon-76 calls.</td></tr>
+<tr><td><code>Kilifi_Subsets/kilifi_inclusion_audit.csv</code></td><td>2,078</td><td>Every Kilifi metadata record, source QC information and inclusion decision.</td></tr>
+<tr><td><code>Kilifi_Subsets/study_inventory.csv</code></td><td>4</td><td>Sample counts and first/last observed year for each contributing study.</td></tr>
+<tr><td><code>Kilifi_Subsets/year_coverage.csv</code></td><td>27</td><td>Every year from 1994 to 2020; includes explicit zero sample counts for 2001 and 2002.</td></tr>
+</table></div>
+<p>These counts describe the bundled snapshot, verified against the <a href="https://www.malariagen.net/data_package/open-dataset-plasmodium-falciparum-v80/">official Pf8 downloads</a>. They are not counts of current malaria cases in Kilifi.</p>
+<h3>Preparation rules</h3>
+<ol>
+<li>Read both original tables as text and join by <code>Sample</code>, requiring one-to-one identifiers.</li>
+<li>Retain metadata where <code>Country = Kenya</code> and <code>Admin level 1 = Kilifi</code>.</li>
+<li>Require <code>QC pass = True</code> and a valid integer collection year from 1994 through 2020, inclusive.</li>
+<li>Keep original marker text, then normalize the order of comma-separated K/T calls.</li>
+<li>Keep uncallable calls in the QC cohort, but exclude them from marker-specific denominators. This snapshot has none among retained Kilifi records.</li>
+<li>Check the provider&#x27;s recorded same-case groups. The retained rows have 1,872 distinct recorded case groups. This checks recorded linkage; it cannot identify unrecorded repeat sampling.</li>
+<li>Retain study identifiers and collection year for sensitivity analyses. Preserve missing years explicitly.</li>
+</ol>
+<p>The script records 206 source-QC exclusions and no additional year exclusions after QC. It does not invent a new coverage threshold or reinterpret excluded records as K-only. Changing these rules requires a documented revision and regeneration of the derived files.</p>
+<h3>Main dataset fields</h3>
+<p>Both prepared sample-level CSVs use this schema. Empty CSV cells indicate missing/not applicable values; no numeric missing-value code is used.</p>
+<div class="table-wrap"><table>
+<tr><th>Field</th><th>Type / values</th><th>Meaning and source</th></tr>
+<tr><td><code>sample_id</code></td><td>Text; unique</td><td>Public sample identifier from <code>Sample</code>; the join key. Preserve as text.</td></tr>
+<tr><td><code>study</code></td><td>Text</td><td>Contributing study ID from <code>Study</code>. It is not a treatment assignment.</td></tr>
+<tr><td><code>country</code></td><td>Text</td><td><code>Kenya</code>, from source metadata.</td></tr>
+<tr><td><code>admin1</code></td><td>Text</td><td><code>Kilifi</code>, from source administrative-area metadata; not an individual address.</td></tr>
+<tr><td><code>year</code></td><td>Integer</td><td>Sample collection year from <code>Year</code>; 1994–2020. Publication year must not replace it.</td></tr>
+<tr><td><code>case_group</code></td><td>Text</td><td>Sorted, comma-separated sample IDs from <code>All samples same case</code>, identifying recorded samples from the same individual. Treat the whole cell as one group key.</td></tr>
+<tr><td><code>qc_pass</code></td><td>Boolean</td><td>Source <code>QC pass</code>; all rows here are <code>True</code>.</td></tr>
+<tr><td><code>genome_callable_pct</code></td><td>Number, percent</td><td>Source <code>% callable</code>, a genome coverage/callability measure. It is not a within-host allele fraction.</td></tr>
+<tr><td><code>sample_type</code></td><td>Text</td><td>Source <code>Sample type</code>, retained without recoding. Consult the provider README for its codes.</td></tr>
+<tr><td><code>ena_accessions</code></td><td>Text</td><td>Source ENA sequencing accession information, retained unchanged. No sequencing reads are downloaded by the starter analysis.</td></tr>
+<tr><td><code>raw_crt76_call</code></td><td>Text</td><td>Exact source value from <code>crt_76[K]</code>, before project recoding. CSV quoting preserves embedded commas.</td></tr>
+<tr><td><code>marker_call</code></td><td>Category</td><td><code>K_only</code>, <code>T_only</code>, <code>mixed_KT</code> or <code>uncallable</code>; see mapping below.</td></tr>
+<tr><td><code>marker_callable</code></td><td>Boolean</td><td><code>True</code> for K-only, T-only or mixed K/T; <code>False</code> for unresolved/missing calls.</td></tr>
+<tr><td><code>has_76T</code></td><td>Integer 0 / 1 / blank</td><td>Primary outcome: 0 for K-only; 1 for T-only or mixed K/T; blank for uncallable.</td></tr>
+<tr><td><code>unambiguous_76T</code></td><td>Integer 0 / 1 / blank</td><td>Secondary outcome: 0 for K-only; 1 for T-only; blank for mixed or uncallable.</td></tr>
+<tr><td><code>time_period</code></td><td>Text category</td><td>Predefined groups: 1994–1999, 2000–2004, 2005–2009, 2010–2014, 2015–2020. Stored with ordinary hyphens.</td></tr>
+<tr><td><code>source_release</code></td><td>Text</td><td><code>MalariaGEN Pf8</code>; identifies the source release.</td></tr>
+</table></div>
+<p>The audit CSV retains source column names. <code>included_qc_cohort</code> is the final inclusion Boolean; <code>inclusion_reason</code> is <code>included_QC_cohort</code>, <code>excluded_QC</code> or <code>excluded_year</code>. If both QC and year are invalid, the audit labels QC first. The source <code>Exclusion reason</code> is preserved.</p>
+<h3>Exact marker mapping</h3>
+<div class="table-wrap"><table>
+<tr><th>Original <code>crt_76[K]</code></th><th>Project category</th><th><code>has_76T</code></th><th><code>unambiguous_76T</code></th></tr>
+<tr><td><code>K</code></td><td><code>K_only</code></td><td>0</td><td>0</td></tr>
+<tr><td><code>T</code></td><td><code>T_only</code></td><td>1</td><td>1</td></tr>
+<tr><td><code>K,T</code> or <code>T,K</code></td><td><code>mixed_KT</code></td><td>1</td><td>blank</td></tr>
+<tr><td>Missing, <code>-</code>, unresolved symbols or unexpected calls</td><td><code>uncallable</code></td><td>blank</td><td>blank</td></tr>
+</table></div>
+<p>The provider README describes <code>-</code> as missing, <code>*</code> as an unresolved haplotype with multiple heterozygous positions, and <code>!</code> as a frameshift call. Those symbols are handled conservatively by the starter code and do not occur in the retained codon-76 subset. Unexpected values should be investigated before an updated analysis is accepted.</p>
+<p><code>K</code> is lysine and <code>T</code> is threonine at PfCRT amino-acid position 76. A mixed call means that the pipeline detected both residue states in the sample. It must not automatically be converted to half a resistant allele. A K-only call describes this position; it does not establish that the whole gene is wild type or that a patient&#x27;s infection is clinically chloroquine-sensitive. See <a href="https://doi.org/10.1016/S1097-2765(05)00077-8">Fidock et al.</a> for experimental background and the provider README for technical encoding.</p>
+<h3>Denominators and uncertainty</h3>
+<ul>
+<li><strong>Primary sample carriage:</strong> <code>(T_only + mixed_KT) / (K_only + T_only + mixed_KT)</code>.</li>
+<li><strong>Secondary unambiguous proportion:</strong> <code>T_only / (K_only + T_only)</code>.</li>
+<li><strong>Composition:</strong> each of K-only, T-only and mixed K/T divided by all callable records.</li>
+</ul>
+<p>The scripts export proportions on a <strong>0–1 scale</strong>, not percentages. Multiply by 100 only for percentage display. Wilson 95% confidence intervals accompany each binomial proportion. These intervals describe binomial sampling uncertainty under the working independence assumption; they do not correct archive selection bias or study differences.</p>
+<p>Annual summaries contain 27 rows. For years with no samples, counts are 0 but proportions and confidence limits are blank. Do not replace those blanks with zero. The secondary result is not an estimate of within-host clone frequency or a universal correction of the primary measure.</p>
+<h3>Opening the files</h3>
+<p>CSV files can be opened in Excel or another spreadsheet viewer. Import original TXT/TSV files using a <strong>tab</strong> delimiter, and keep identifiers as text. Do not save edits over the original files. Commas within a quoted field are part of its value; use a CSV parser rather than splitting lines manually. The notebook reads the original files itself, so spreadsheet software is optional.</p></section><section id="run"><h2>Run the Kilifi starter analysis</h2>
+<p>The main analysis uses only the data already in this folder. The supplied output files show what a successful run produces. You do not need a GPU or the full genome-wide Pf8 downloads.</p>
+<h3>Option A: run Python locally</h3>
+<p>Install Python 3.12 if it is not already available. Open a terminal <strong>inside the extracted <code>Kilifi_Malaria_Project</code> folder</strong>. The tested analysis package versions are recorded in <code>requirements.txt</code>; installing them requires internet access.</p>
+<p>On Windows, use Command Prompt:</p>
+<pre><code>py -3.12 -m venv .venv
+.venv\Scripts\python.exe -m pip install -r 03_Analysis\requirements.txt
+.venv\Scripts\python.exe 03_Analysis\run_analysis.py</code></pre>
+<p>On macOS/Linux with Python 3.12 installed:</p>
+<pre><code>python3.12 -m venv .venv
+.venv/bin/python -m pip install -r 03_Analysis/requirements.txt
+.venv/bin/python 03_Analysis/run_analysis.py</code></pre>
+<p>These commands call the environment&#x27;s interpreter directly, so activation is optional. See the <a href="https://docs.python.org/3/library/venv.html">official Python environment documentation</a>.</p>
+<p>A successful run prints 1,872 retained records, 169 mixed K/T calls and 1,703 unambiguous records. It identifies 2001 and 2002 as years without samples. It regenerates the prepared CSVs and example outputs at their existing paths. Save copies under new filenames before making experimental changes that you want to keep.</p>
+<h3>Option B: learn through the notebook</h3>
+<p>Open <code>Kilifi_Starter_Analysis.ipynb</code> in Jupyter or upload it to <a href="https://colab.research.google.com/">Google Colab</a>. Run the code cells in order and read the explanations between them.</p>
+<p>For local Jupyter, install JupyterLab in the same environment using that environment&#x27;s Python with <code>-m pip install jupyterlab</code>, then launch it with <code>-m jupyterlab</code>. Open the supplied notebook. The folder remains accessible to its code even if Jupyter starts in <code>03_Analysis</code>.</p>
+<p>For Colab:</p>
+<ol>
+<li>Upload the notebook using Colab&#x27;s <strong>Upload notebook</strong> option.</li>
+<li>Run the first code cell. If the project folder is absent, it asks you to upload the complete <code>Kilifi_Malaria_Project.zip</code>.</li>
+<li>Select the downloaded ZIP. The cell extracts it into the Colab working directory and locates the analysis files.</li>
+<li>Continue through the remaining cells. Standard scientific packages are normally available in Colab; their versions may differ from the recorded local environment.</li>
+<li>If a required package is missing or incompatible, use a separate Colab code cell: <code>%pip install -r /content/Kilifi_Malaria_Project/03_Analysis/requirements.txt</code>, then restart the session if Colab requests it and run the notebook again.</li>
+<li>Download files you want to keep from Colab&#x27;s Files pane and save the notebook. Colab sessions are temporary; see its <a href="https://research.google.com/colaboratory/faq.html">official FAQ</a>.</li>
+</ol>
+<p>The notebook code was checked by executing its ordinary Python cells sequentially in the recorded local environment. Its interactive Colab upload step requires your browser and has not been exercised in your Google account.</p>
+<h3>What the notebook does</h3>
+<ol>
+<li>Finds the complete extracted project folder and imports the helpers.</li>
+<li>Checks the original data hashes and rebuilds the Kilifi dataset.</li>
+<li>Checks sample counts, coding and missing-year handling.</li>
+<li>Produces annual and period summaries with Wilson 95% confidence intervals.</li>
+<li>Compares primary and secondary marker definitions, pooled versus equally weighted annual summaries, and all studies versus the largest study.</li>
+<li>Exports three example figures and an exploratory period association test.</li>
+<li>Prompts the group to interpret the results and record decisions.</li>
+</ol>
+<h3>Files you may edit</h3>
+<p>The notebook is intended for group notes and extensions. Core preparation and calculations are in <code>analysis_helpers.py</code>; <code>run_analysis.py</code> calls those functions. The source files in <code>02_Datasets/Original_Pf8</code> are preserved snapshots. A changed source hash intentionally stops execution so that a new download cannot silently alter the analysis.</p>
+<p>The proposed periods are fixed teaching choices, not fitted change points or official policy periods. Changing the question, period definitions, inclusion rules or outcomes should follow lecturer feedback and be recorded in <code>06_Group_Work/MEETING_AND_DECISIONS.md</code>.</p>
+<h3>Troubleshooting</h3>
+<div class="table-wrap"><table>
+<tr><th>Message / problem</th><th>Action</th></tr>
+<tr><td><code>No module named pandas</code>, <code>numpy</code>, <code>scipy</code> or <code>matplotlib</code></td><td>Install <code>requirements.txt</code> with the same Python interpreter used to run the script.</td></tr>
+<tr><td>Cannot find <code>analysis_helpers</code> or <code>Pf8_samples.txt</code></td><td>Extract the whole ZIP, preserve folder names and run from the project folder.</td></tr>
+<tr><td>Original file differs from verified snapshot</td><td>Restore the bundled original. If intentionally changing data releases, review and update validation rules explicitly.</td></tr>
+<tr><td>CSV shows many values in one column</td><td>Import CSV with a comma delimiter; import original TXT/TSV with a tab delimiter.</td></tr>
+<tr><td>2001/2002 proportions appear blank</td><td>Expected: those years have no retained samples.</td></tr>
+<tr><td>Existing output figures changed after running</td><td>The script regenerates example outputs. Preserve earlier versions under different names if comparing changes.</td></tr>
+</table></div>
+<p>Official software references: <a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html">JupyterLab installation</a>, <a href="https://pandas.pydata.org/docs/user_guide/index.html">pandas user guide</a>, <a href="https://matplotlib.org/stable/tutorials/index.html">Matplotlib tutorials</a>, <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2_contingency.html">SciPy contingency-table test</a>.</p></section><section id="outputs"><h2>Example outputs from the supplied data</h2>
+<p>These files were generated by the starter analysis using the verified Pf8 snapshot. They are real computations supplied for reproduction and group review. They do not constitute a finished project report or an approved interpretation.</p>
+<div class="table-wrap"><table>
+<tr><th>File</th><th>What it shows</th></tr>
+<tr><td><code>01_yearly_sample_counts.png</code></td><td>Unequal annual sample counts and the 2001/2002 gaps.</td></tr>
+<tr><td><code>02_marker_composition.png</code></td><td>Annual fractions of K-only, T-only and mixed K/T among callable records.</td></tr>
+<tr><td><code>03_temporal_prevalence.png</code></td><td>Two sample-level outcome definitions, with their respective 95% Wilson intervals.</td></tr>
+<tr><td><code>annual_summary.csv</code></td><td>All 27 calendar years, sample/category counts, outcome proportions and confidence limits.</td></tr>
+<tr><td><code>period_summary.csv</code></td><td>The same measures for five predefined periods.</td></tr>
+<tr><td><code>annual_main_study.csv</code></td><td>Annual summary restricted to study <code>1132-PF-K1000G-DBS-KE-BEJON</code> (1,608 records).</td></tr>
+<tr><td><code>sampling_sensitivity.csv</code></td><td>Period comparisons of all studies versus the largest study, and pooled versus equally weighted observed-year means.</td></tr>
+<tr><td><code>exploratory_period_test.json</code></td><td>Pearson chi-square comparison of period and detected 76T carriage, with observed counts, expected-count check and interpretation limits.</td></tr>
+</table></div>
+<h3>Reading the summary tables</h3>
+<p><code>n_qc</code> counts retained QC-passing records; <code>n_callable</code> is the primary denominator. <code>n_unambiguous</code> is the secondary denominator. <code>n_K_only</code>, <code>n_T_only</code>, <code>n_mixed_KT</code> and <code>n_uncallable</code> are category counts. <code>sampling_status</code> distinguishes observed years from years without samples.</p>
+<p>The prefixes <code>carrier</code>, <code>unambiguous</code>, <code>K_only</code>, <code>T_only</code> and <code>mixed_KT</code> each have <code>_proportion</code>, <code>_ci_low</code> and <code>_ci_high</code> columns. All are on a 0–1 scale. The category intervals are individual binomial intervals, not simultaneous confidence regions for the full composition. Blank proportions for absent years must remain missing.</p>
+<p>In the sensitivity table, <code>pooled_carrier</code> weights years by their callable sample counts. <code>equal_year_carrier</code> gives each observed year in a period equal weight. The latter is a different descriptive statistic; it does not make the archive population-representative. <code>observed_years</code> excludes absent years. The largest study happens to cover every observed year in this snapshot, but its sample sizes are also uneven.</p>
+<h3>Questions for the group</h3>
+<ul>
+<li>Does the broad historical pattern agree under both outcome definitions? Where does the difference matter most?</li>
+<li>Which years have the least precise estimates, and how does their sample size explain this?</li>
+<li>How do pooled and equally weighted summaries differ? Is the difference scientifically important?</li>
+<li>Does restricting to the largest contributing study change the interpretation? What residual sampling differences remain?</li>
+<li>How do your conclusions compare with Omedo et al. and Wamae et al., allowing for different samples, assays and definitions?</li>
+</ul>
+<p>The chi-square test asks whether carriage and the chosen periods are associated in these archived samples. It does not test a monotonic trend, isolate a policy effect or measure treatment efficacy. It assumes independent observations; recorded case linkage was checked, but archive design may still limit inference. Read the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2_contingency.html">SciPy method documentation</a> before interpreting it.</p>
+<p>A year with no detected 76T still has uncertainty: use its interval and denominator. It is not proof that the marker was absent throughout Kilifi. The data end in 2020 and cannot establish the current prevalence or justify a change in treatment.</p></section><section id="reading"><h2>Reading guide and resource index</h2>
+<p>Start with the provider README and the Pf8 paper, then read the two closely related Kenyan studies. Three full open-access PDFs are included for offline reading. Fidock et al. and software documentation are linked online. This is a focused starter reading set, not an exhaustive literature review.</p>
+<h3>1. Understand the dataset</h3>
+<p><strong>Malaria Genomic Epidemiology Network (MalariaGEN) et al. (2025).</strong> “Pf8: an open dataset of Plasmodium falciparum genome variation in 33,325 worldwide samples.” <em>Wellcome Open Research</em>, 10:325. <a href="https://doi.org/10.12688/wellcomeopenres.24031.1">Published article</a>.</p>
+<ul>
+<li>Included PDF: <code>MalariaGEN_2025_Pf8.pdf</code> (20 pages; version 1).</li>
+<li>Why read it: explains the resource, sequence-derived genotypes, filtering and available analyses. It also places chloroquine-resistance marker trends in a wider context.</li>
+<li>Extract for your report: data release, collection scope, source processing and the limits of using derived marker calls.</li>
+<li>Read alongside: <code>02_Datasets/Original_Pf8/Pf8_README.txt</code>, which documents the actual file columns and call encoding.</li>
+</ul>
+<p><strong>Official data landing page:</strong> <a href="https://www.malariagen.net/data_package/open-dataset-plasmodium-falciparum-v80/">MalariaGEN Pf8 open dataset</a>.</p>
+<div class="table-wrap"><table>
+<tr><th>Resource</th><th>Direct original download</th><th>Included locally?</th></tr>
+<tr><td>Worldwide metadata</td><td><a href="https://zenodo.org/records/18681980/files/Pf8_samples.txt?download=1">Pf8_samples.txt</a></td><td>Yes, unchanged in <code>02_Datasets/Original_Pf8</code>.</td></tr>
+<tr><td>Resistance marker calls</td><td><a href="https://zenodo.org/records/18681980/files/Pf8_drug_resistance_marker_genotypes.tsv?download=1">Pf8_drug_resistance_marker_genotypes.tsv</a></td><td>Yes, unchanged in <code>02_Datasets/Original_Pf8</code>.</td></tr>
+<tr><td>Provider documentation</td><td><a href="https://zenodo.org/records/18681980/files/Pf8_README.txt?download=1">Pf8_README.txt</a></td><td>Yes, unchanged in <code>02_Datasets/Original_Pf8</code>.</td></tr>
+<tr><td>Supplementary resource / contributing-study information</td><td><a href="https://figshare.com/articles/online_resource/Supplementary_data_to_Pf8_an_open_dataset_of_i_Plasmodium_falciparum_i_genome_variation_in_33_325_worldwide_samples/29153447">Pf8 supplementary resource on Figshare</a></td><td>Online link; use when investigating source study designs.</td></tr>
+<tr><td>Genome-wide calls, sequencing access and additional applications</td><td><a href="https://www.malariagen.net/data_package/open-dataset-plasmodium-falciparum-v80/">Pf8 resource catalogue</a></td><td>Online only; not required by the supplied marker-level analysis.</td></tr>
+</table></div>
+<p>Source links and hashes are recorded in <code>07_Reproducibility/source_manifest.json</code>. The project preserves the retrieved files as a fixed snapshot rather than silently following later releases.</p>
+<h3>2. Read the closest prior Kilifi study</h3>
+<p><strong>Omedo, I. et al. (2022).</strong> “Spatio-temporal distribution of antimalarial drug resistant gene mutations in a Plasmodium falciparum parasite population from Kilifi, Kenya: A 25-year retrospective study.” <em>Wellcome Open Research</em>, 7:45. <a href="https://doi.org/10.12688/wellcomeopenres.17656.1">Published article, version 1</a>.</p>
+<ul>
+<li>Included PDF: <code>Omedo_2022_Kilifi.pdf</code> (21 pages; version 1).</li>
+<li>Why read it: directly related work on Kilifi samples collected during 1994–2018, using amplicon sequencing and multiple resistance markers.</li>
+<li>Extract: sample selection, assay, marker definitions, denominators, temporal patterns and limitations.</li>
+<li>Implication for your proposal: the broad biological trend is already studied. Your intended contribution is a focused Pf8 reanalysis through 2020 with explicit mixed-call and sampling sensitivity checks. Lecturer acceptance of that distinction is still necessary.</li>
+</ul>
+<h3>3. Compare another long-term coastal Kenyan analysis</h3>
+<p><strong>Wamae, K. et al. (2019).</strong> “No Evidence of Plasmodium falciparum k13 Artemisinin Resistance-Conferring Mutations over a 24-Year Analysis in Coastal Kenya but a Near Complete Reversion to Chloroquine-Sensitive Parasites.” <em>Antimicrobial Agents and Chemotherapy</em>, 63(12):e01067-19. <a href="https://doi.org/10.1128/AAC.01067-19">Published article</a>.</p>
+<ul>
+<li>Included PDF: <code>Wamae_2019_Coastal_Kenya.pdf</code> (12 pages).</li>
+<li>Why read it: provides related longitudinal resistance-marker evidence and local biological context.</li>
+<li>Extract: collection window, sample design, marker detection and how the authors support their interpretation.</li>
+<li>Comparison task: explain differences from your scope and determine whether data sources overlap before describing the paper as independent validation. Do not transfer the title&#x27;s phenotype wording directly to a single-codon analysis.</li>
+</ul>
+<h3>4. Understand why PfCRT matters biologically</h3>
+<p><strong>Fidock, D. A. et al. (2000).</strong> “Mutations in the P. falciparum Digestive Vacuole Transmembrane Protein PfCRT and Evidence for Their Role in Chloroquine Resistance.” <em>Molecular Cell</em>, 6(4):861–871. <a href="https://doi.org/10.1016/S1097-2765(05)00077-8">DOI</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/11090624/">PubMed record</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2944663/">PMC full text</a>.</p>
+<ul>
+<li>Access: online links; a PDF is not bundled.</li>
+<li>Why read it: foundational experimental work connecting PfCRT mutations with chloroquine resistance.</li>
+<li>Extract: the protein&#x27;s cellular role and the evidence supporting the resistance association.</li>
+<li>Keep clear: experimental mechanism evidence and the descriptive temporal archive analysis answer different questions. Your data observe marker calls; they do not reproduce a drug-susceptibility experiment.</li>
+</ul>
+<h3>5. Learn the tools used here</h3>
+<div class="table-wrap"><table>
+<tr><th>Need</th><th>Official resource</th><th>Use in this project</th></tr>
+<tr><td>A separate Python environment</td><td><a href="https://docs.python.org/3/library/venv.html">Python venv documentation</a></td><td>Install the recorded packages without changing other projects.</td></tr>
+<tr><td>Read and manipulate tables</td><td><a href="https://pandas.pydata.org/docs/user_guide/index.html">pandas user guide</a></td><td>Joins, filters, group counts and CSV export.</td></tr>
+<tr><td>Understand array calculations</td><td><a href="https://numpy.org/doc/stable/user/index.html">NumPy user guide</a></td><td>Numerical operations used by the analysis helpers.</td></tr>
+<tr><td>Learn plots and labels</td><td><a href="https://matplotlib.org/stable/tutorials/index.html">Matplotlib tutorials</a></td><td>Reproduce and improve the scientific figures.</td></tr>
+<tr><td>Understand the period test</td><td><a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2_contingency.html">SciPy chi2_contingency</a></td><td>Assumptions and interpretation of the exploratory contingency-table comparison.</td></tr>
+<tr><td>Open a notebook locally</td><td><a href="https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html">JupyterLab installation</a></td><td>Run the starter notebook in the same Python environment.</td></tr>
+<tr><td>Work in a browser</td><td><a href="https://research.google.com/colaboratory/faq.html">Google Colab FAQ</a></td><td>Understand notebook sessions, uploads and temporary files.</td></tr>
+<tr><td>Import the bibliography</td><td><a href="https://www.zotero.org/support/adding_items_to_zotero">Zotero importing guidance</a></td><td>Import <code>references.bib</code>, then check metadata against each paper.</td></tr>
+</table></div>
+<p>The starter scripts are Python-based. You may use another tool your group knows if it reproduces the documented inclusion rules and measures. Record any change and verify the resulting counts and figures.</p>
+<h3>Literature notes template</h3>
+<p>For each paper, record: full citation; research question; samples and collection years; assay/dataset; marker definition; main finding relevant to your question; limitations; possible sample overlap; and how your project differs. Write notes in your own words and keep page/figure references for checking.</p>
+<p>The full PDFs retain their authorship, article version and Creative Commons attribution notices. Do not treat included papers or the supplied analysis as work performed by your group. See <code>ATTRIBUTION_AND_REUSE.md</code>.</p></section><section id="work"><h2>Group work plan</h2>
+<p>Use the supplied course instructions as the authority for dates, assessment and submissions. This plan maps the folder to the course checkpoints; it does not invent deadlines or mark allocations. Fill in your official class group and group number in the proposal.</p>
+<h3>What makes the proposal defensible</h3>
+<p>The proposed question is narrow enough to finish: one organism, one location, one gene position and one defined historical archive. The useful analytical contribution is to quantify how mixed-call handling, unequal sampling and changing study contributions affect interpretation. Existing studies already describe related resistance trends in Kilifi. Explain that relationship honestly and ask the lecturer to assess overlap with classmates&#x27; proposals.</p>
+<p>Strong work will show a clear biological question, traceable data, justified preparation, interpretable analysis, readable figures and limitations supported by the evidence. An app, machine learning model or elaborate extra analysis is not needed to establish those strengths. Marks depend on the course rubric and the group&#x27;s execution.</p>
+<h3>Checkpoint deliverables</h3>
+<div class="table-wrap"><table>
+<tr><th>Stage</th><th>Deliverable to prepare</th><th>Resources in this folder</th></tr>
+<tr><td>Checkpoint 1: definition</td><td>Refined title, biological problem, question, scope, beneficiaries and 2–4 objectives; initial data idea.</td><td>Proposal DOCX; original course instructions; reading guide.</td></tr>
+<tr><td>Checkpoint 2: data sources</td><td>Source table with release, access link, unit of observation, relevant fields, availability and limitations.</td><td>Original Pf8 README; source manifest; data dictionary; Pf8 paper.</td></tr>
+<tr><td>Checkpoint 3: preparation and exploration</td><td>Reproducible join/filter workflow, inclusion audit, marker mapping, coverage and study summaries.</td><td>Notebook; prepared CSVs; validation JSON; yearly sample-count chart.</td></tr>
+<tr><td>Checkpoint 4: bioinformatics analysis</td><td>Annual/period marker estimates, uncertainty and justified sensitivity comparisons.</td><td>Analysis helpers; summary CSVs; comparison figures; method notes.</td></tr>
+<tr><td>Checkpoint 5: biological interpretation</td><td>Explain observed patterns, compare literature, discuss study composition and distinguish marker surveillance from clinical conclusions.</td><td>Reading guide; example-output questions; decision record.</td></tr>
+<tr><td>Final report and presentation</td><td>Integrated report, readable selected figures, reproducible methods, references, contribution record and practiced answers.</td><td>Report outline; notebook; outputs; group notes.</td></tr>
+</table></div>
+<p>Use lecturer feedback to decide whether the table-based analysis of sequence-derived genotypes is sufficient for your Genomics track. The supplied scope does not claim to perform read alignment, de novo variant calling or a whole-genome analysis.</p>
+<h3>Six work areas — choose owners yourselves</h3>
+<p>No names are assigned. For a smaller group, combine adjacent areas; the course allows a maximum of six members. Each area should have an owner and a second person who can reproduce or explain it.</p>
+<div class="table-wrap"><table>
+<tr><th>Work area</th><th>Concrete responsibilities</th><th>Cross-review</th></tr>
+<tr><td>Biology and prior studies</td><td>Explain PfCRT/K76T, extract relevant study methods, write evidence-backed background and comparison.</td><td>Review the interpretation with the sensitivity owner.</td></tr>
+<tr><td>Sources and sample quality</td><td>Verify provenance, source fields, exclusions, same-case checks and study inventory.</td><td>Rebuild the prepared cohort with the primary analysis owner.</td></tr>
+<tr><td>Primary analysis</td><td>Explain category coding, denominators, annual/period summaries and Wilson intervals.</td><td>Check selected calculations manually with the source-quality owner.</td></tr>
+<tr><td>Sensitivity and inference</td><td>Compare mixed-call definitions, largest-study restriction and annual weighting; assess the period test&#x27;s limits.</td><td>Explain the results to the biology owner.</td></tr>
+<tr><td>Figures and validation</td><td>Reproduce charts, check labels/counts/missing years, write captions and identify misleading displays.</td><td>Review each chart with the primary analysis owner.</td></tr>
+<tr><td>Reproducibility and integration</td><td>Run the full workflow from a fresh extracted folder, maintain decisions, integrate report and presentation evidence.</td><td>Have a second member repeat the complete run.</td></tr>
+</table></div>
+<p>Everyone should contribute to interpretation, review the final report and be able to explain the full research question. Record actual contributions; do not claim a task was done because it appears in this plan.</p>
+<h3>First group meeting</h3>
+<ol>
+<li>Read the proposed question aloud and agree on its unit of analysis: archived samples.</li>
+<li>Confirm class group, official group number, submission dates and lecturer feedback process.</li>
+<li>Open the main prepared CSV and identify sample, year, study and marker columns.</li>
+<li>Read the outcome definitions and explain one mixed K/T example together.</li>
+<li>Run the script or notebook and compare the outputs with the supplied examples.</li>
+<li>Assign work areas and record any question or scope revision in the decision template.</li>
+</ol></section><section id="report"><h2>Report and presentation outline</h2>
+<p>Adapt this outline to the lecturer&#x27;s actual format and length requirements. Bracketed prompts require the group&#x27;s own work; they are not completed results.</p>
+<h3>1. Title and project identity</h3>
+<p>Use the agreed title, class group and official group number. State that this is a retrospective analysis of public, sequence-derived marker calls from archived samples.</p>
+<h3>2. Biological background and rationale</h3>
+<p>Explain malaria drug resistance, the role of PfCRT and the meaning of K76T using primary literature. Describe related Kilifi studies. Explain why sensitivity to mixed calls and archive composition matters for this particular question. Avoid claiming that no one has studied the trend before.</p>
+<h3>3. Research question, scope and objectives</h3>
+<p>Use the agreed wording from the proposal, revised after feedback. Define the population actually available for analysis, the 1994–2020 range and the sample-level outcomes. Do not describe the archive as a random survey of all Kilifi residents.</p>
+<h3>4. Data and methods</h3>
+<ul>
+<li>Cite Pf8 and give the exact bundled source files and retrieval date.</li>
+<li>Explain the sample identifier join, location/year filters, source QC and recorded case-group check.</li>
+<li>Show the inclusion counts and marker classification mapping.</li>
+<li>Define both denominators mathematically and explain mixed and missing calls.</li>
+<li>State the predefined periods, Wilson intervals and sensitivity analyses.</li>
+<li>Explain any exploratory test, its assumptions and what it cannot establish.</li>
+<li>Record software versions and identify the reproducible notebook/script.</li>
+</ul>
+<h3>5. Results</h3>
+<p>Start with data coverage and exclusions. Present category counts, annual/period summaries, uncertainty and sensitivity findings. Cite each table or figure in the text. Report denominators with proportions; do not copy only a p-value. Separate observations from explanations.</p>
+<p>Recommended figures: annual sample counts; marker composition; primary versus secondary prevalence with confidence intervals. Include a compact sensitivity table if it changes interpretation. Do not add charts simply to increase the figure count.</p>
+<p>Caption template: “[What is shown] in [which samples and years]. [Outcome definition and denominator]. [Interval method, if used]. [Meaning of missing years]. Source: MalariaGEN Pf8; group analysis.”</p>
+<h3>6. Discussion and limitations</h3>
+<p>Compare findings with Omedo et al. and Wamae et al. Check whether samples or source studies may overlap before calling those comparisons independent validation. Discuss mixed infections, sampling intensity, contributing studies, assay/callability constraints, recorded versus unrecorded repeats and the single-marker scope. Explain why population-level selection is a possible interpretation rather than an experimentally established cause in this analysis.</p>
+<p>The archive ends in 2020. State that these data do not determine current prevalence, direct drug susceptibility or clinical treatment policy. A K-only call at this codon does not establish the sequence or phenotype of the entire parasite genome.</p>
+<h3>7. Conclusion</h3>
+<p>Answer the agreed question using the evidence actually obtained, including whether sensitivity checks materially changed the interpretation. Identify one specific follow-up that addresses a limitation.</p>
+<h3>8. References and supporting material</h3>
+<p>Use the reading guide and <code>references.bib</code> as a starting bibliography. Cite sources you actually read. Attach or link the reproducible notebook, data dictionary, inclusion audit and contribution record as the course permits.</p>
+<h3>Presentation practice</h3>
+<p>Every member should be ready to answer:</p>
+<ol>
+<li>Why this gene, this codon, this location and this period?</li>
+<li>How did 2,078 Kilifi metadata records become 1,872 retained samples?</li>
+<li>What exactly does a mixed K/T call mean for each denominator?</li>
+<li>Why are 2001 and 2002 blank in prevalence tables?</li>
+<li>Why do some intervals look wider even when the proportion is similar?</li>
+<li>What changes when you restrict to the largest study?</li>
+<li>How does the project differ from published work and classmates&#x27; work?</li>
+<li>Which conclusion is supported, and which tempting conclusion exceeds the data?</li>
+</ol></section><section id="repro"><h2>Reproducibility record</h2>
+<p>This pack contains a fixed, verified Pf8 snapshot plus the code needed to rebuild its Kilifi subset and example outputs.</p>
+<h3>Records</h3>
+<div class="table-wrap"><table>
+<tr><th>File</th><th>Purpose</th></tr>
+<tr><td><code>source_manifest.json</code></td><td>Original source/download URLs, data hashes, bibliography metadata and included-paper provenance.</td></tr>
+<tr><td><code>data_validation.json</code></td><td>Inclusion totals, marker counts, observed-year coverage and input data hashes. Regenerated by the analysis.</td></tr>
+<tr><td><code>run_validation.json</code></td><td>Environment versions and the checks actually performed when preparing the pack.</td></tr>
+<tr><td><code>file_manifest.json</code></td><td>SHA-256 hashes and byte sizes of the delivered files, excluding this manifest itself and temporary Python caches.</td></tr>
+<tr><td><code>check_integrity.py</code></td><td>Standard-library script checking each file listed in the file manifest.</td></tr>
+</table></div>
+<h3>What was checked</h3>
+<ul>
+<li>The three bundled provider files matched fresh bytes downloaded from their official linked locations.</li>
+<li>Sample IDs were unique in each source table before the one-to-one join.</li>
+<li>Kenya/Kilifi and source QC/year selection produced the recorded inclusion counts.</li>
+<li>Retained recorded case-group keys were nonempty and unique.</li>
+<li>Mixed-call order was normalized consistently, and mixed calls were excluded from the secondary denominator.</li>
+<li>Years without samples retained missing prevalence and confidence limits.</li>
+<li>The ordinary Python notebook cells ran sequentially in the recorded local environment; the interactive Colab upload step was not exercised in a Google account.</li>
+<li>Example PNGs were visually inspected. Included PDFs were checked as readable PDF files with matching titles and attribution notices.</li>
+<li>The final ZIP was checked for archive integrity and a single top-level folder.</li>
+</ul>
+<p>These checks support faithful reproduction of this snapshot. They cannot establish that all biological confounding or unrecorded repeated sampling has been resolved.</p>
+<h3>Check an untouched extracted copy</h3>
+<p>From the project root, run:</p>
+<pre><code>python 07_Reproducibility/check_integrity.py</code></pre>
+<p>On Windows you can also use <code>py 07_Reproducibility\check_integrity.py</code>. This check needs only Python&#x27;s standard library. It checks known delivered files; additional files are allowed and are not validated by this manifest.</p>
+<p>Changes to a document or regenerated figure can legitimately produce a different hash. Keep an untouched downloaded copy as the comparison baseline, and record intentional revisions. Do not change the manifest merely to hide an unexplained difference.</p>
+<h3>Reproduce the analysis</h3>
+<p>Follow <code>03_Analysis/HOW_TO_RUN.md</code>. The data/analysis dependencies are listed in <code>03_Analysis/requirements.txt</code>. The analysis reads original data from <code>02_Datasets/Original_Pf8</code>, writes derived data to <code>02_Datasets/Kilifi_Subsets</code>, and writes example results to <code>04_Example_Outputs</code>.</p>
+<p>The analysis intentionally verifies known source hashes and snapshot totals. If the group uses another release or changes the scope, review the expected values and inclusion rules explicitly and record the revision before updating the validation code.</p></section></main><footer>
+<p><a href="06_Group_Work/MEETING_AND_DECISIONS.md">Meeting and decision template</a> · <a href="ATTRIBUTION_AND_REUSE.md">Attribution and reuse</a> · <a href="05_Reading/references.bib">Bibliography</a></p>
+<p class="small">This guide opens offline after the ZIP is extracted. External source links and software downloads require internet access. The group should verify its work and incorporate lecturer feedback before submission.</p>
+</footer></body></html>

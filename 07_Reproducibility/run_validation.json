@@ -1,0 +1,29 @@
+{
+  "prepared_date": "2026-09-08",
+  "python": "3.12.13",
+  "packages": {
+    "pandas": "2.2.3",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "matplotlib": "3.10.8"
+  },
+  "notebook_check_method": "Ordinary Python code cells executed sequentially using exec in the local environment; no Jupyter kernel invocation",
+  "executed_code_cells": [
+    "cell-01",
+    "cell-03",
+    "cell-05",
+    "cell-07",
+    "cell-09",
+    "cell-11",
+    "cell-13"
+  ],
+  "interactive_Colab_upload_tested": false,
+  "elapsed_seconds": 2.44,
+  "classification_and_denominator_checks": "passed",
+  "original_hash_and_snapshot_checks": "passed",
+  "notebook_code_execution": "passed",
+  "figure_visual_review": "passed: three PNG files inspected after final regeneration",
+  "included_PDF_titles_and_attribution": "passed: three PDFs readable, titles and CC attribution notices checked",
+  "resource_guide_links": "passed: 44 links checked; all relative targets and section anchors resolved",
+  "archive_structure_precheck": "passed"
+}

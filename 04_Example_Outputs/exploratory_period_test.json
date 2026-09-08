@@ -1,0 +1,42 @@
+{
+  "method": "Pearson chi-square: predefined period x detected 76T carriage",
+  "status": "Approximation checks passed",
+  "statistic": 660.7216588126126,
+  "p_value": 1.1127969341379329e-141,
+  "degrees_of_freedom": 4,
+  "minimum_expected_count": 47.22435897435897,
+  "periods": [
+    "1994-1999",
+    "2000-2004",
+    "2005-2009",
+    "2010-2014",
+    "2015-2020"
+  ],
+  "columns": [
+    "76T_detected",
+    "K_only"
+  ],
+  "observed_counts": [
+    [
+      256,
+      56
+    ],
+    [
+      74,
+      65
+    ],
+    [
+      163,
+      177
+    ],
+    [
+      118,
+      271
+    ],
+    [
+      25,
+      667
+    ]
+  ],
+  "interpretation_limit": "Exploratory association in archived samples. It is not proof of a monotonic trend, a policy effect or clinical resistance."
+}

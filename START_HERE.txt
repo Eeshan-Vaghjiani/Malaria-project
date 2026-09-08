@@ -1,0 +1,64 @@
+KILIFI MALARIA PROJECT — GROUP RESOURCE PACK
+Prepared 8 September 2026
+
+PROJECT
+Temporal Genomic Analysis of the pfcrt K76T Chloroquine-Resistance
+Marker in Plasmodium falciparum from Kilifi, Kenya, 1994–2020
+
+START WITH THESE FOUR STEPS
+1. Extract the entire ZIP. Keep the folder structure together.
+2. Open OPEN_RESOURCE_GUIDE.html in your browser for a readable folder guide.
+   Open 01_Project_Documents/Kilifi_pfcrt_Project_Proposal.docx.
+   Add your class group and official group number before using the form answers.
+3. Open 02_Datasets/Kilifi_Subsets/kilifi_pfcrt_qcpass.csv to see the
+   prepared data; read 02_Datasets/DATA_DICTIONARY.md alongside it.
+4. Follow 03_Analysis/HOW_TO_RUN.md to run the notebook or Python script.
+   You can view the included example charts without installing anything.
+
+WHAT EACH FOLDER CONTAINS
+01_Project_Documents: editable proposal and your original project instructions.
+02_Datasets: original Pf8 data, cleaned Kilifi subsets, inclusion audit,
+             study inventory, annual coverage and a data dictionary.
+03_Analysis: beginner starter notebook, reusable Python analysis, package
+             requirements and instructions for local Python or Google Colab.
+04_Example_Outputs: real-data example tables, three charts and an exploratory
+                    period comparison, supplied for review and reproduction.
+05_Reading: three full open-access papers, annotated reading links and references.
+06_Group_Work: checkpoint plan, report outline and meeting/decision templates.
+07_Reproducibility: source URLs, validation results and file integrity checks.
+
+VERIFIED DATA SNAPSHOT
+The original metadata contains 33,325 records worldwide. The accompanying
+marker table contains 24,409 QC-passing records worldwide. Filtering to
+Kenya / Kilifi / 1994–2020 gives 2,078 metadata records; 206 fail source QC.
+The retained dataset has 1,872 samples: 1,236 K-only, 467 T-only and 169
+mixed K/T calls at codon 76. All retained samples have callable codon-76 data.
+The unambiguous subset has 1,703 records. There are no retained samples for
+2001 or 2002. Those years are missing observations, not zero prevalence.
+
+WHAT YOU ARE ACTUALLY MEASURING
+Primary: the proportion of callable samples in which 76T is detected,
+including mixed K/T calls. Secondary: T-only among unambiguous K-only or
+T-only samples. These are different sample-level measures. Neither is
+the fraction of all parasite clones carrying the mutation.
+
+YOUR GROUP'S CONTRIBUTION
+Explain the biology, reproduce the data preparation, justify the two
+definitions and compare sensitivity to mixed calls, annual sampling and
+contributing study. Existing papers already study this biological trend.
+Your proposed distinction is the focused, reproducible sensitivity analysis;
+whether it is sufficiently distinct from classmates' projects still needs
+lecturer feedback. Keep a record of changes in 06_Group_Work.
+
+The notebook and example results are starting material for learning and
+review. The group should understand, verify and adapt them, then write its
+own supported interpretation. This pack does not guarantee marks or approval.
+
+All data needed for the supplied analysis is included. Internet is needed
+for an initial software installation, Colab, and linked online readings.
+Full raw sequencing reads and genome-wide variant files are not bundled;
+the selected question uses the supplied sequence-derived marker calls.
+
+For citations and reuse, read ATTRIBUTION_AND_REUSE.md and
+05_Reading/READING_GUIDE.md. For download integrity, follow
+07_Reproducibility/REPRODUCIBILITY.md.
