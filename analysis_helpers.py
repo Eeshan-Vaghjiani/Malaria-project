@@ -14,7 +14,6 @@ import numpy as np
 import pandas as pd
 from scipy.stats import chi2_contingency
 
-PROJECT_NAME = 'Kilifi_Malaria_Project'
 YEARS = list(range(1994, 2021))
 PERIODS = [('1994-1999',1994,1999), ('2000-2004',2000,2004),
            ('2005-2009',2005,2009), ('2010-2014',2010,2014),
@@ -27,19 +26,19 @@ EXPECTED_HASHES = {
 
 
 def locate_project_root():
-    candidates = [Path(__file__).resolve().parent.parent, Path.cwd(), Path.cwd()/PROJECT_NAME]
+    candidates = [Path(__file__).resolve().parent, Path.cwd()]
     candidates.extend(Path.cwd().parents)
     for p in candidates:
-        if (p/'02_Datasets/Original_Pf8/Pf8_samples.txt').exists():
+        if (p/'data/Pf8_samples.txt').exists():
             return p
-    raise FileNotFoundError('Extract the complete Kilifi_Malaria_Project folder first.')
+    raise FileNotFoundError('Could not find data/Pf8_samples.txt.')
 
 
 def verify_original_inputs(root):
     report = {}
     for name, expected in EXPECTED_HASHES.items():
-        path = Path(root)/'02_Datasets/Original_Pf8'/name
-        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        path = Path(root)/'data'/name
+        actual = hashlib.sha256(path.read_bytes().replace(b'\r\n', b'\n')).hexdigest()
         if actual != expected:
             raise ValueError(f'{name} differs from the verified snapshot. Keep the original files unchanged; review any new release explicitly.')
         report[name] = actual
@@ -67,7 +66,7 @@ def period_for_year(year):
 def build_dataset(root, export=True):
     root = Path(root)
     hashes = verify_original_inputs(root)
-    raw = root/'02_Datasets/Original_Pf8'
+    raw = root/'data'
     meta = pd.read_csv(raw/'Pf8_samples.txt', sep='\t', dtype=str, keep_default_na=False)
     geno = pd.read_csv(raw/'Pf8_drug_resistance_marker_genotypes.tsv', sep='\t', dtype=str, keep_default_na=False)
     if not meta['Sample'].is_unique or not geno['Sample'].is_unique:
@@ -121,13 +120,12 @@ def build_dataset(root, export=True):
     }
     validate_snapshot(out,report)
     if export:
-        dest=root/'02_Datasets/Kilifi_Subsets'; dest.mkdir(exist_ok=True,parents=True)
+        dest=root/'outputs'; dest.mkdir(exist_ok=True,parents=True)
         out.to_csv(dest/'kilifi_pfcrt_qcpass.csv',index=False)
         out.loc[out['unambiguous_76T'].notna()].to_csv(dest/'kilifi_pfcrt_unambiguous.csv',index=False)
         joined[['Sample','Study','Country','Admin level 1','Year','QC pass','Exclusion reason',
                 'All samples same case','included_qc_cohort','inclusion_reason']].to_csv(dest/'kilifi_inclusion_audit.csv',index=False)
         out.groupby('study').agg(records=('sample_id','size'),first_year=('year','min'),last_year=('year','max')).reset_index().to_csv(dest/'study_inventory.csv',index=False)
-        (root/'07_Reproducibility/data_validation.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     return out, report
 
 
@@ -252,13 +250,13 @@ def make_figures(annual,sensitivity,output_dir):
 
 def run_analysis(root=None,output_dir=None):
     root=Path(root or locate_project_root())
-    dest=Path(output_dir) if output_dir else root/'04_Example_Outputs'
+    dest=Path(output_dir) if output_dir else root/'outputs'
     dest.mkdir(exist_ok=True,parents=True)
     data,validation=build_dataset(root)
     annual=summarize(data);period=summarize(data,'time_period')
     sensitivity,annual_main=sampling_sensitivity(data)
     annual.to_csv(dest/'annual_summary.csv',index=False)
-    annual[['year','n_qc','sampling_status']].to_csv(root/'02_Datasets/Kilifi_Subsets/year_coverage.csv',index=False)
+    annual[['year','n_qc','sampling_status']].to_csv(dest/'year_coverage.csv',index=False)
     period.to_csv(dest/'period_summary.csv',index=False)
     sensitivity.to_csv(dest/'sampling_sensitivity.csv',index=False)
     annual_main.to_csv(dest/'annual_main_study.csv',index=False)
